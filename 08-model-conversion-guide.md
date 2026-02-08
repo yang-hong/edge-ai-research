@@ -28,15 +28,7 @@ RK3576 的 NPU (神经网络处理器) 就像一个只会做特定数学题的"�
 
 ## 2. 转换流程图 (Step-by-Step)
 
-```mermaid
-graph TD
-    A[HuggingFace] -->|下载 Qwen/DeepSeek| B(原始模型文件夹)
-    B -->|放在 PC/Mac 上| C{rknn-llm 转换工具}
-    C -->|加载 config| D[量化 Quantization]
-    D -->|编译 Compile| E[导出 .rkllm 文件]
-    E -->|拷贝| F[Rock 4D 开发板]
-    F -->|rkllm-runtime| G[跑起来!]
-```
+![RK3576 Model Conversion Flow](images/model-conversion-flow.png)
 
 ---
 
