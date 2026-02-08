@@ -1,40 +1,40 @@
-# RK3576 Model Selection Matrix (Based on Research)
+# RK3576 模型选择矩阵 (基于研究)
 
-*Note: Local benchmarks skipped due to environment issues. Recommendations based on RK3576 specs (6 TOPS, 8GB RAM) and community data.*
+*注意: 由于环境问题跳过了本地基准测试。推荐基于 RK3576 规格 (6 TOPS, 8GB RAM) 和社区数据。*
 
-## 1. Top Recommendation: General Purpose Chat / Assistant
-- **Model**: **Qwen2.5-1.5B-Instruct** (Quantized W4A16 or W8A8)
-- **Why**: Best balance of speed, quality, and instruction following for small parameter count.
-- **Est. Speed**: ~15-20 tok/s.
-- **RAM**: ~1.5GB (leaves plenty for OS/apps).
+## 1. 首选推荐: 通用聊天 / 助手
+- **模型**: **Qwen2.5-1.5B-Instruct** (W4A16 或 W8A8 量化)
+- **理由**: 在小参数规模下，速度、质量和指令遵循的最佳平衡。
+- **预估速度**: ~15-20 tok/s。
+- **内存**: ~1.5GB (为系统/应用留有充足空间)。
 
-## 2. Best for Reasoning / Code
-- **Model**: **DeepSeek-R1-Distill-Qwen-1.5B**
-- **Why**: Distilled reasoning capabilities in a small package.
-- **Est. Speed**: ~12-18 tok/s.
-- **Caveat**: Newer model, ensure RKLLM v1.2.3+ is used.
+## 2. 最佳推理 / 代码
+- **模型**: **DeepSeek-R1-Distill-Qwen-1.5B**
+- **理由**: 小体积中蕴含蒸馏后的推理能力。
+- **预估速度**: ~12-18 tok/s。
+- **注意**: 较新的模型，确保使用 RKLLM v1.2.3+。
 
-## 3. Best for English / Creative Writing
-- **Model**: **Phi-3-Mini-3.8B** (Quantized W4A16)
-- **Why**: High quality text generation, trained on synthetic data.
-- **Est. Speed**: ~5-8 tok/s (Slower due to size).
-- **RAM**: ~3.5GB.
+## 3. 最佳英文 / 创意写作
+- **模型**: **Phi-3-Mini-3.8B** (W4A16 量化)
+- **理由**: 基于合成数据训练，高质量文本生成。
+- **预估速度**: ~5-8 tok/s (由于体积较大，速度较慢)。
+- **内存**: ~3.5GB。
 
-## 4. Best for Ultra-Low Latency / IoT Control
-- **Model**: **TinyLlama-1.1B** or **Qwen2.5-0.5B**
-- **Why**: Extremely fast, low memory footprint. Good for simple JSON extraction or classification.
-- **Est. Speed**: 30+ tok/s.
-- **RAM**: < 1GB.
+## 4. 最佳超低延迟 / IoT 控制
+- **模型**: **TinyLlama-1.1B** 或 **Qwen2.5-0.5B**
+- **理由**: 极快，低内存占用。适合简单的 JSON 提取或分类。
+- **预估速度**: 30+ tok/s。
+- **内存**: < 1GB。
 
-## 5. Vision-Language (VLM) Options
-- **Model**: **Qwen2-VL-2B** or **MiniCPM-V-2.6**
-- **Why**: Only viable VLMs for this hardware class.
-- **Status**: Supported in RKLLM. Requires C++ demo usually for best performance.
+## 5. 视觉语言模型 (VLM) 选项
+- **模型**: **Qwen2-VL-2B** 或 **MiniCPM-V-2.6**
+- **理由**: 此类硬件级别唯一可行的 VLM。
+- **状态**: RKLLM 支持。通常需要 C++ demo 以获得最佳性能。
 
-## 6. Deployment Strategy
-| Use Case | Recommended Model | Quantization | Notes |
+## 6. 部署策略
+| 用例 | 推荐模型 | 量化 | 备注 |
 | :--- | :--- | :--- | :--- |
-| **Personal Assistant** | Qwen2.5-1.5B | W4A16 / W8A8 | Fast, good chat. |
-| **Coding Helper** | DeepSeek-R1-Distill | W4A16 | Good logic, fits in RAM. |
-| **Home Automation** | Qwen2.5-0.5B | W8A8 | Instant response. |
-| **Reading Long Text** | Phi-3-Mini | W4A16 | Better coherence (3.8B). |
+| **个人助手** | Qwen2.5-1.5B | W4A16 / W8A8 | 快速，良好的聊天体验。 |
+| **编程助手** | DeepSeek-R1-Distill | W4A16 | 逻辑性好，适合内存。 |
+| **家庭自动化** | Qwen2.5-0.5B | W8A8 | 即时响应。 |
+| **阅读长文本** | Phi-3-Mini | W4A16 | 更好的连贯性 (3.8B)。 |

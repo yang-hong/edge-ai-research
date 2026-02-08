@@ -1,4 +1,4 @@
-# 🚗 Edge AI & Automotive News Brief (Past Week)
+# 🚗 边缘 AI & 汽车新闻简报 (过去一周)
 
 ## 1. 车载 Agent (In-Vehicle Agents)
 **核心趋势：从"指令式"到"高能动性 (High Agency)"**

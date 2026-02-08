@@ -1,42 +1,42 @@
-# RK3576 "Gotchas" & Pitfalls
+# RK3576 "陷阱" 与注意事项
 
-## 1. ⚠️ Model Conversion: x86 Linux Only
-- **Issue**: You CANNOT convert models (`.onnx` -> `.rknn` or `.safetensors` -> `.rkllm`) on the Rock 4D board itself (ARM64).
-- **Issue**: You CANNOT convert models on macOS directly (unless using Docker/VM).
-- **Solution**: 
-  - Use a dedicated x86 Linux machine (Ubuntu 20.04/22.04).
-  - Use Docker on Mac (ensure `platform: linux/amd64` in docker-compose).
-  - Use a VM (VMware Fusion / Parallels / UTM) running Ubuntu.
-  - **Do NOT try to pip install rknn-toolkit2 on the ARM board for conversion. It won't work.**
+## 1. ⚠️ 模型转换：仅限 x86 Linux
+- **问题**: 你**不能**在 Rock 4D 开发板本身 (ARM64) 上转换模型 (`.onnx` -> `.rknn` 或 `.safetensors` -> `.rkllm`)。
+- **问题**: 你**不能**在 macOS 上直接转换模型 (除非使用 Docker/VM)。
+- **解决方案**: 
+  - 使用专用的 x86 Linux 机器 (Ubuntu 20.04/22.04)。
+  - 在 Mac 上使用 Docker (确保 docker-compose 中设置 `platform: linux/amd64`)。
+  - 使用运行 Ubuntu 的虚拟机 (VMware Fusion / Parallels / UTM)。
+  - **不要尝试在 ARM 板上 pip install rknn-toolkit2 进行转换。这行不通。**
 
-## 2. ⚠️ NPU Core Count Mismatch
-- **Issue**: Many tutorials and scripts are written for RK3588 (3 NPU cores).
-- **Fact**: RK3576 has **2 NPU cores**.
-- **Result**: Copy-pasting code might fail with "Invalid NPU Core" or "Resource Busy".
-- **Fix**: Always set `target_platform="rk3576"` and `core_mask=RKNN_NPU_CORE_0_1` (or similar depending on API version) when initializing.
+## 2. ⚠️ NPU 核心数不匹配
+- **问题**: 许多教程和脚本是为 RK3588 (3 个 NPU 核心) 编写的。
+- **事实**: RK3576 只有 **2 个 NPU 核心**。
+- **结果**: 复制粘贴的代码可能会失败，报错 "Invalid NPU Core" 或 "Resource Busy"。
+- **修复**: 初始化时，始终设置 `target_platform="rk3576"` 和 `core_mask=RKNN_NPU_CORE_0_1` (或取决于 API 版本的类似设置)。
 
-## 3. ⚠️ RKLLM Runtime Version Hell
-- **Issue**: The `.rkllm` model file format changes between versions.
-- **Symptom**: "Load model failed" or segfault.
-- **Rule**: If you convert with Toolkit v1.1.4, you MUST use Runtime v1.1.4.
-- **Recommendation**: Stick to the **latest release (v1.2.3)** for both toolkit and runtime.
+## 3. ⚠️ RKLLM 运行时版本地狱
+- **问题**: `.rkllm` 模型文件格式在版本之间会发生变化。
+- **症状**: "Load model failed" (加载模型失败) 或段错误 (segfault)。
+- **规则**: 如果你使用 Toolkit v1.1.4 转换，你必须使用 Runtime v1.1.4。
+- **建议**: 工具包和运行时都坚持使用**最新版本 (v1.2.3)**。
 
-## 4. ⚠️ Thermal Throttling
-- **Issue**: LLM inference pushes the NPU and CPU hard.
-- **Symptom**: Performance drops after 5-10 minutes.
-- **Fix**: **Active cooling (fan) is mandatory.** Do not rely on passive heatsinks for LLM workloads.
+## 4. ⚠️ 散热与降频
+- **问题**: LLM 推理会使 NPU 和 CPU 满载。
+- **症状**: 5-10 分钟后性能下降。
+- **修复**: **主动散热 (风扇) 是必须的。** 不要依赖被动散热片进行 LLM 负载工作。
 
-## 5. ⚠️ SD Card vs eMMC vs NVMe
-- **Issue**: Loading a 4GB model from a slow SD card takes 30s+.
-- **Impact**: Cold start latency is terrible.
-- **Fix**: Use eMMC module or NVMe SSD (via M.2 slot if available/adapted).
-- **Benchmark**: SD Card (~20-40 MB/s) vs eMMC (~150 MB/s) vs NVMe (~1000+ MB/s).
+## 5. ⚠️ SD 卡 vs eMMC vs NVMe
+- **问题**: 从慢速 SD 卡加载 4GB 模型需要 30 秒以上。
+- **影响**: 冷启动延迟极其糟糕。
+- **修复**: 使用 eMMC 模块或 NVMe SSD (如果有 M.2 插槽/转接)。
+- **基准测试**: SD 卡 (~20-40 MB/s) vs eMMC (~150 MB/s) vs NVMe (~1000+ MB/s)。
 
-## 6. ⚠️ Memory Fragmentation
-- **Issue**: 8GB RAM is shared. If you load/unload models frequently, you might run out of contiguous memory for NPU buffers.
-- **Fix**: Reboot daily or manage memory carefully. Reserve CMA (Contiguous Memory Allocator) in kernel boot args if needed (advanced).
+## 6. ⚠️ 内存碎片
+- **问题**: 8GB 内存是共享的。如果你频繁加载/卸载模型，可能会耗尽 NPU 缓冲区的连续内存。
+- **修复**: 每天重启或小心管理内存。如果需要 (高级)，在内核启动参数中预留 CMA (连续内存分配器)。
 
-## 7. ⚠️ Quantization Accuracy
-- **Issue**: W8A8 is standard, but W4A16 is needed for larger models.
-- **Trade-off**: W4A16 might degrade reasoning quality on smaller models (<3B).
-- **Test**: Always benchmark perplexity (PPL) if possible before deploying.
+## 7. ⚠️ 量化精度
+- **问题**: W8A8 是标准，但 W4A16 是较大模型所需的。
+- **权衡**: W4A16 可能会降低较小模型 (<3B) 的推理质量。
+- **测试**: 部署前如果可能，始终基准测试困惑度 (PPL)。
