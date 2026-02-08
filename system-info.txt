@@ -1,0 +1,9 @@
+=== System Info ===
+Intel(R) Core(TM) i5-7267U CPU @ 3.10GHz
+8 GB RAM
+ProductName:		macOS
+ProductVersion:		13.4
+BuildVersion:		22F66
+=== Disk Space ===
+Filesystem       Size   Used  Avail Capacity iused     ifree %iused  Mounted on
+/dev/disk1s4s1  466Gi   11Gi   56Gi    17%  355384 583714720    0%   /
