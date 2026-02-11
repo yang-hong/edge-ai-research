@@ -1,0 +1,25 @@
+[Unit]
+Description=RockClaw AI Assistant
+Documentation=file:///opt/rockclaw/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rockclaw
+Group=rockclaw
+WorkingDirectory=/opt/rockclaw
+EnvironmentFile=/opt/rockclaw/.env
+ExecStart=/usr/bin/python3 -m src.agent
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+# 资源限制 (模拟嵌入式环境)
+CPUQuota=150%
+MemoryMax=1G
+MemorySwapMax=0
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target

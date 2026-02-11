@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  rockclaw-poc:
+    build: .
+    container_name: rockclaw-poc
+    # 极度受限的资源配置 (模拟 RK3576 单核 + 1GB RAM)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'      # 限制 1.5 个 CPU 核心
+          memory: 1G       # 限制 1GB RAM
+          memory-swap: 0   # 禁用 swap (模拟嵌入式无虚拟内存)
+    # 网络限制可选 (需要特权模式)
+    # network_mode: "none"  # 完全断网测试
+    volumes:
+      - ./data:/app/data   # 持久化记忆存储
+      - ./.env:/app/.env   # 环境配置
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true
+    restart: "no"  # POC 不需要自启
